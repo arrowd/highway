@@ -601,21 +601,22 @@
 
 #endif  // non-MSVC
 
-#if HWY_ARCH_X86 && \
+#if (HWY_ARCH_X86 || HWY_ARCH_E2K) && \
     ((defined(HWY_WANT_SSE2) && HWY_WANT_SSE2) || HWY_CHECK_SSE2)
 #define HWY_BASELINE_SSE2 HWY_SSE2
 #else
 #define HWY_BASELINE_SSE2 0
 #endif
 
-#if HWY_ARCH_X86 && \
+#if (HWY_ARCH_X86 || HWY_ARCH_E2K) && \
     ((defined(HWY_WANT_SSSE3) && HWY_WANT_SSSE3) || HWY_CHECK_SSSE3)
 #define HWY_BASELINE_SSSE3 HWY_SSSE3
 #else
 #define HWY_BASELINE_SSSE3 0
 #endif
 
-#if HWY_ARCH_X86 && ((defined(HWY_WANT_SSE4) && HWY_WANT_SSE4) || \
+#if (HWY_ARCH_X86 || HWY_ARCH_E2K) && \
+    ((defined(HWY_WANT_SSE4) && HWY_WANT_SSE4) || \
                      (HWY_CHECK_SSE4 && HWY_CHECK_PCLMUL_AES))
 #define HWY_BASELINE_SSE4 HWY_SSE4
 #else
@@ -695,6 +696,10 @@
 #define HWY_BASELINE_LOONGARCH (HWY_LSX)
 #else
 #define HWY_BASELINE_LOONGARCH 0
+#endif
+
+#if HWY_ARCH_E2K
+#define HWY_BASELINE_E2K HWY_SSE2
 #endif
 
 // Workaround for libaom, which unconditionally defines HWY_BASELINE_TARGETS
@@ -903,6 +908,10 @@
 #define HWY_ATTAINABLE_LOONGARCH HWY_BASELINE_LOONGARCH
 #endif
 
+#if HWY_ARCH_E2K
+#define HWY_ATTAINABLE_E2K (HWY_SSE2 | HWY_SSSE3 | HWY_SSE4 | HWY_AVX2)
+#endif
+
 #ifndef HWY_ATTAINABLE_TARGETS_X86  // allow override
 #if HWY_COMPILER_MSVC && defined(HWY_SLOW_MSVC)
 // Fewer targets for faster builds.
@@ -936,6 +945,9 @@
 #elif HWY_ARCH_LOONGARCH
 #define HWY_ATTAINABLE_TARGETS \
   HWY_ENABLED(HWY_BASELINE_SCALAR | HWY_ATTAINABLE_LOONGARCH)
+#elif HWY_ARCH_E2K
+#define HWY_ATTAINABLE_TARGETS \
+  HWY_ENABLED(HWY_BASELINE_SCALAR | HWY_ATTAINABLE_E2K)
 #else
 #define HWY_ATTAINABLE_TARGETS (HWY_ENABLED_BASELINE)
 #endif  // HWY_ARCH_*

@@ -24,7 +24,7 @@
 #include "hwy/highway.h"
 #include "hwy/x86_cpuid.h"
 
-#if HWY_ARCH_X86
+#if HWY_ARCH_X86 || HWY_ARCH_E2K
 #include <xmmintrin.h>
 
 #elif (HWY_ARCH_ARM || HWY_ARCH_PPC || HWY_ARCH_S390X || HWY_ARCH_RISCV || \

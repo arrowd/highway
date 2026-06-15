@@ -424,11 +424,17 @@
 #define HWY_ARCH_HEXAGON 0
 #endif
 
+#if defined(__e2k__)
+#define HWY_ARCH_E2K 1
+#else
+#define HWY_ARCH_E2K 0
+#endif
+
 // It is an error to detect multiple architectures at the same time, but OK to
 // detect none of the above.
 #if (HWY_ARCH_X86 + HWY_ARCH_PPC + HWY_ARCH_ARM + HWY_ARCH_ARM_OLD +        \
      HWY_ARCH_WASM + HWY_ARCH_RISCV + HWY_ARCH_S390X + HWY_ARCH_LOONGARCH + \
-     HWY_ARCH_HEXAGON) > 1
+     HWY_ARCH_HEXAGON + HWY_ARCH_E2K) > 1
 #error "Must not detect more than one architecture"
 #endif
 
@@ -444,6 +450,8 @@
 #define HWY_ARCH_MAX_BYTES 32
 #elif HWY_ARCH_PPC || HWY_ARCH_S390X || HWY_ARCH_ARM_V7 || HWY_ARCH_ARM_OLD
 #define HWY_ARCH_MAX_BYTES 16
+#elif HWY_ARCH_E2K
+#define HWY_ARCH_MAX_BYTES 64
 #else
 #error "Missing case for HWY_ARCH_*"
 #endif

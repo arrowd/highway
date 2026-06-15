@@ -393,7 +393,7 @@ struct TestNaN {
 #endif
 
     // Min/Max
-#if (HWY_ARCH_X86 || HWY_ARCH_WASM) && (HWY_TARGET < HWY_EMU128)
+#if (HWY_ARCH_X86 || HWY_ARCH_WASM || HWY_ARCH_E2K) && (HWY_TARGET < HWY_EMU128)
     // Native WASM or x86 SIMD return the second operand if any input is NaN.
     HWY_ASSERT_VEC_EQ(d, v1, Min(nan, v1));
     HWY_ASSERT_VEC_EQ(d, v1, Max(nan, v1));

@@ -326,6 +326,20 @@ static inline HWY_MAYBE_UNUSED const char* TargetName(int64_t target) {
       HWY_CHOOSE_LASX(func_name), /* LASX */     \
       HWY_CHOOSE_LSX(func_name)   /* LSX */
 
+#elif HWY_ARCH_E2K
+#define HWY_MAX_DYNAMIC_TARGETS 5
+#define HWY_HIGHEST_TARGET_BIT HWY_HIGHEST_TARGET_BIT_X86
+// These must match the order in which the HWY_TARGETS are defined
+// starting by the least significant (HWY_HIGHEST_TARGET_BIT + 1 -
+// HWY_MAX_DYNAMIC_TARGETS) bit. This list must contain exactly
+// HWY_MAX_DYNAMIC_TARGETS elements and does not include SCALAR. The first entry
+// corresponds to the best target. Don't include a "," at the end of the list.
+#define HWY_CHOOSE_TARGET_LIST(func_name)                     \
+  nullptr,                             /* reserved */         \
+      HWY_CHOOSE_AVX2(func_name),      /* AVX2 */             \
+      HWY_CHOOSE_SSE4(func_name),      /* SSE4 */             \
+      HWY_CHOOSE_SSSE3(func_name),     /* SSSE3 */            \
+      HWY_CHOOSE_SSE2(func_name)       /* SSE2 */
 #else
 // Unknown architecture, will use HWY_SCALAR without dynamic dispatch, though
 // still creating single-entry tables in HWY_EXPORT to ensure portability.
