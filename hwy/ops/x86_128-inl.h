@@ -628,7 +628,7 @@ static HWY_INLINE HWY_MAYBE_UNUSED bool IsConstantX86Vec(
   HWY_DIAGNOSTICS(pop)
 
   return IsConstantRawX86Vec(num_of_lanes_tag,
-                             reinterpret_cast<GccRawVec>(v.raw));
+                             (GccRawVec)(v.raw));
 }
 
 template <class TTo, class V>
@@ -7652,9 +7652,9 @@ HWY_API Vec128<T, N> TableLookupLanes(Vec128<T, N> v, Indices128<T, N> idx) {
 #elif HWY_TARGET == HWY_SSE2
 #if HWY_COMPILER_GCC_ACTUAL && HWY_HAS_BUILTIN(__builtin_shuffle)
   typedef uint32_t GccU32RawVectType __attribute__((__vector_size__(16)));
-  return Vec128<T, N>{reinterpret_cast<typename detail::Raw128<T>::type>(
-      __builtin_shuffle(reinterpret_cast<GccU32RawVectType>(v_full.raw),
-                        reinterpret_cast<GccU32RawVectType>(vidx.raw)))};
+  return Vec128<T, N>{(typename detail::Raw128<T>::type)(
+      __builtin_shuffle((GccU32RawVectType)(v_full.raw),
+                        (GccU32RawVectType)(vidx.raw)))};
 #else
   alignas(16) T src_lanes[4];
   alignas(16) int32_t indices[4];
@@ -12016,7 +12016,7 @@ HWY_API VFromD<D> ConvertInRangeTo(D /*di*/, VFromD<RebindToFloat<D>> v) {
 #if HWY_COMPILER_GCC_ACTUAL >= 700 && !HWY_IS_DEBUG_BUILD
   if (detail::IsConstantX86VecForF2IConv<int32_t>(v)) {
     typedef float GccF32RawVectType __attribute__((__vector_size__(16)));
-    const auto raw_v = reinterpret_cast<GccF32RawVectType>(v.raw);
+    const auto raw_v = (GccF32RawVectType)(v.raw);
     return Dup128VecFromValues(
         D(), detail::X86ConvertScalarFromFloat<int32_t>(raw_v[0]),
         detail::X86ConvertScalarFromFloat<int32_t>(raw_v[1]),
